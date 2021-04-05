@@ -5,7 +5,7 @@ const Engineer = require('./empClasses/engineer');
 const Manager = require('./empClasses/manager');
 const Intern = require('./empClasses/intern');
 
-function buildProfile(response) {
+function buildProfile() {
     inquirer.prompt([{
         name: 'ManagerName',
         type: 'input',
@@ -53,8 +53,16 @@ function buildProfile(response) {
                 name:'email',
                 type:'input',
                 message:'Please enter intern email.'
-            },{}
+            },{
+                name:'ID',
+                type:'input',
+                message:'Please Enter Intern ID'
+            },{
+                name:'school',
+                type:'input',
+                message:'Please Enter the school you attended'
             }])
         }
-    }
+    }    
+    
 }
