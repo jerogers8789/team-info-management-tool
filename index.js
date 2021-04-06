@@ -5,6 +5,18 @@ const Engineer = require('./empClasses/engineer');
 const Manager = require('./empClasses/manager');
 const Intern = require('./empClasses/intern');
 
-function buildProfile() 
+function Employee(name, ID, email){
+    this.name = name;
+    this.ID = ID;
+    this.email = email;
+}
+
+class Manager extends Employee {
+x
+}
+
+function buildProfile() {
+
+}
     
 buildProfile();
