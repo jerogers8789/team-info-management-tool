@@ -1,69 +1,96 @@
 const fs = require('fs')
 const inquirer = require('inquirer')
 const jest = require('jest')
+const Employee = require('./empClasses/employee'); 
 const Engineer = require('./empClasses/engineer');
 const Manager = require('./empClasses/manager');
 const Intern = require('./empClasses/intern');
 
-function Employee(name, ID, email){
-    this.name = name;
-    this.ID = ID;
-    this.email = email;
+let employees = [];
+
+const builderQuestions = [
+                {
+                    name: 'name',
+                    type: 'input',
+                    message: 'Enter Employee Name:'
+                }, {
+                    name: 'employID',
+                    type: 'input',
+                    message: 'Enter Employee ID:'
+                }, {
+                    name: 'email',
+                    type: 'input',
+                    message: 'Enter Employee Email:'
+                }, {
+                    name: 'role',
+                    type: 'list',
+                    message: 'Select Employee Role:',
+                    choices: ['Engineer', 'Intern', 'Manager']
+                }, {
+                    name: 'officeNumber',
+                    type: 'input',
+                    message: 'Enter Office Number:',
+                    when: function (answers) {
+                        return answers.role === 'Manager'
+                    }
+                }, {
+                    name: 'github',
+                    type: 'input',
+                    message: 'Enter Github Info:',
+                    when: function (answers) {
+                        return answers.role === 'Engineer'
+                    }
+                }, {
+                    name: 'schoolName',
+                    type: 'input',
+                    message: 'Enter School Name:',
+                    when: function (answers) {
+                        return answers.role === 'Intern'
+                    }
+                }
+            ]
+
+function employeeBuilder(loopFunction) {
+    console.log('before try')
+    try {
+        console.log('inside try')
+        inquirer.prompt(builderQuestions).then(function (response) {
+            
+            switch(response.role) {
+                case 'Manager':
+                    newEmployee = new Manager(response.name, response.employID, response.email, response.officeNumber);
+                  break;
+                case 'Intern':
+                    newEmployee = new Intern(response.name, response.employID, response.email, response.schoolName);
+                  break;
+                case 'Engineer':
+                    newEmployee = new Engineer(response.name, response.employID, response.email, response.github);
+                    break;
+                default:
+                  newEmployee = new Employee(response.name, response.employID, response.email)
+              }
+              employees.push(newEmployee);
+              loopFunction();
+        });
+    } catch (error) {
+        console.log('AN ERROR OCCURED WHILE BUILDING TEAM: ' + error)
+    }
 }
 
-class Manager extends Employee {
- constructor(officeNum) {
-     this.officeNum = officeNum;
- }
+function initBuilder() {
+    inquirer.prompt(
+        [
+            {
+                name: 'nextEmployee',
+                type: 'confirm',
+                default: true,
+                message: 'Would you like to add an employee to the team?'
+            }
+        ]
+    ).then(function (response) {
+        if (response.nextEmployee)
+        employeeBuilder(initBuilder);
+    })
 }
-class Engineer extends Employee {
-    constructor(gitHub) {
-        this.gitHub = gitHub;
-    }
-}
-class Intern extends Employee {
-    constructor(school) {
-        this.school = school;
-    }
-}
-function buildProfile(response) {
-inquirer.prompt([{
-    name: 'name',
-    type: 'input',
-    message: 'Enter employee name'
-},{
-    name: 'ID',
-    type: 'input',
-    message: 'Enter employee ID'
-},{
-    name: 'email',
-    type: 'input',
-    message: 'Enter employee email'
-},{
-    name: 'role',
-    type: 'list',
-    message: 'Please select employee role',
-    choices: ['Manager', 'Engineer', 'Intern',]
-}]);
- if (inquirer.prompt(role.response) === Manager) {  
-     inquirer.prompt([{
-         name: 'officeNum',
-         type: 'input',
-         message: 'Please Enter Manager office number.'
-     }]);
- } else if (inquirer.prompt(role.response) === Engineer) {
-     inquirer.prompt([{
-         name: 'gitHub',
-         type: 'input',
-         message: 'Please Enter Engineer Github username.'
-     }]);
- } else if (inquirer.prompt(role.response)=== Intern) {
-     inquirer.prompt([{
-         name: 'school',
-         type:'input',
-         message:'Please Enter the name of the school attended.'
-     }]);
- }
-}
-    
-buildProfile();
+
+initBuilder();
