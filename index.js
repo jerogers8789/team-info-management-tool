@@ -1,10 +1,10 @@
 const fs = require('fs')
 const inquirer = require('inquirer')
 const jest = require('jest')
-const Employee = require('./empClasses/employee'); 
-const Engineer = require('./empClasses/engineer');
-const Manager = require('./empClasses/manager');
-const Intern = require('./empClasses/intern');
+const Employee = require('./empClassesJS/employee'); 
+const Engineer = require('./empClassesJS/engineer');
+const Manager = require('./empClassesJS/manager');
+const Intern = require('./empClassesJS/intern');
 
 let employees = [];
 
